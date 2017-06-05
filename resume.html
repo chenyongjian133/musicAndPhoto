@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/animatios.css"/>
+		<link rel="stylesheet" type="text/css" href="css/resume.css"/>
+	</head>
+	<body>
+		<aside class="clearfix">
+			<a href="javascript:;" class="active"><span>首页</span></a>
+			<a href="javascript:;"><span>关于我</span></a>
+			<a href="javascript:;"><span>技能</span></a>
+			<a href="javascript:;"><span>经验</span></a>
+			<a href="javascript:;"><span>联系我</span></a>
+		</aside>
+		<section class="page_one" id='page1'>
+			<!--导航-->
+			<nav class="clearfix">
+				<div class="nav_wrap">
+					<div class="logo">
+						<a href="resume.html">Resume</a>
+					</div>
+					<div class="nav_bar">
+						<ul class="nav_bar_ul">
+							<li><a href="resume.html">Home</a></li>
+							<li><a href="#">page2</a></li> 
+							<li><a href="#">page3</a></li>
+							<li><a href="#">page4</a></li>
+							<li><a href="#">page5</a></li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+			<!--个人中心-->
+			<div class="person_center">
+				<div class="portrait">
+					<img onmousemove="this.src='imga/22.png'" onmouseout="this.src='imga/portrait1.jpg'" src="imga/portrait1.jpg" />
+				</div>
+				<div class="person_text clearfix">
+					<h2>世上只有想不通的人，没有走不通的路。</h2>
+					<hr>
+					<h3>张婷</h3>
+					<h3>Web前端工程师</h3>
+					<h3>求职上海 / 苏州</h3>
+					<h3>18551133163</h3>
+				</div>
+			</div>
+			<div class="down_arrow">
+				<a class="scroll"><span></span></a> 
+			</div>
+		</section>
+	</body>
+	<script type="text/javascript">
+//	通过ID获取元素
+		function getId(obj){
+			return document.getElementById(obj);
+		}
+		//增加class
+		function addClass(obj,clsName){
+			var cName=obj.className.split(' ');
+			if(!obj.className){
+				obj.className=cName;
+				return;
+			}
+			for(var i=0;i<cName.length;i++){
+				if(cName[i]===clsName)return;
+			}
+			obj.className+=' '+clsName;
+		}
+//		删除class
+		function addClass(obj,clsName){
+			var cName=obj.className.split(' ');
+			if(!obj.className){
+				return;
+			}
+			for(var i=0;i<cName.length;i++){
+				if(cName[i]===clsName){
+					cName.splice(i,1);
+					i--;
+				}
+			}
+			obj.className=cName.join(' ');
+		}
+//		判断浏览器
+		function getBrowser(){
+			var userAgent=navigator.userAgent;
+			var isOpera=userAgent.indexOf('Opera')>-1;
+			if(isOpera){
+				return 'Opera';
+			}
+			if(userAgent.indexOf('Firefox')>-1){
+				return 'ff';
+			}
+			if(userAgent.indexOf('Chrome')>-1){
+				return 'Chrome';
+			}
+			if(userAgent.indexOf('Safari')>-1){
+				return 'Safari';
+			}
+			if(userAgent.indexOf('compatible')>-1&& userAgent.indexOf("MSIE") > -1 && !isOpera){
+				return "IE";
+			}
+		}
+//		获取视口宽度和body宽度
+		function getView(){
+			return{
+				 w: document.documentElement.clientWidth || document.body.clientWidth,
+        		h: document.documentElement.clientHeight || document.body.clientHeight
+			}
+		}
+		//设置section的高度
+		var viewHeigth=function(){
+			var sectionEle=document.getElementsByTagName('section');
+			var isheight=getView().h;
+			for(var i=0;i<sectionEle.length;i++){
+				sectionEle[i].style.height=isheight+'px';
+			}
+		}
+//		设置导航的没开发选项
+		var waited_develop=function(){
+			var waitedli=document.getElementsByClassName('nav_bar_ul')[0].children;
+			for(var i=1;i<waitedli.length;i++){
+				if(waitedli[i].addEventListener){
+					waitedli[i].addEventListener('click',myfunction,false);
+				}else{
+					waitedli[i].attachEvent('onclick',myfunction);
+				}
+			}
+			function myfunction(){
+				alert('待开发');
+			}
+		}
+		viewHeigth();
+		waited_develop();
+	</script>
+</html>

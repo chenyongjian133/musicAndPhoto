@@ -1,0 +1,197 @@
+音悦台开发指南
+	1引入CSS函数
+	2window预加载
+	3取消默认行为   document---tochstart--ev兼容--ev。preventDefault
+	4，rem适配    自调--创建style  取视口宽度，html：font-size：width/16  appdengchild
+	5,自定义取元素DOM方法  getEle()  2个参数
+	5，输入框失焦点获取焦点事件  changgeFocus--无参数
+			需要ev  阻止冒泡,取消默认，focus方法
+			document- blur()
+	6，菜单切换方法  CMFCmenuBar（）无参
+			取菜单按钮，浮层，
+			菜单按钮监视touchstart
+				ev阻止冒泡,取消默认
+				判断menuBtn的classname==mentBtnClos
+					打开浮层
+					改变classname
+				否则。。。
+			document监听touchstart
+				判断按钮的className==menuBtnOpen
+					隐藏浮层
+					改变classname
+			浮层监听touchstart
+				阻止冒泡，取消默认
+	7，拖拽导航 drag()无参  dragNav()
+			取导航包裹元素,ul
+			定义元素起始位置和鼠标起始位置{}
+			定义左移动极限minX   包裹宽度-ul宽度
+			定义上一次时间和上一次位置,时间差(不能为0消bug),位置差,用作快速滑动判断
+			包裹元素监听touchstart
+			ev.changedTouches[0]；
+			取消ul的动画时间
+			调用CSS取ul的初始位置translateX
+			取鼠标开始位置,lastTime=new Date.getTiem
+			取上一次位置
+			位置差情0  消bug
+			包裹元素监听move事件
+				取最新的鼠标位置，求差
+				(会有回弹bug,自己修)
+				var scale=0  初始放大系数
+				如果鼠标位移差加元素起始位置》0   进入左边留白
+				scale=屏宽/屏宽+位移差
+				translateX=elementX+（disX*scale）
+				else  translateX《minX  进入右边留白
+					取留白大小
+					scale=屏宽/屏宽+留白
+					translateX=elementX+（disX*scale）
+				调CSS
+				实时刷新当前时间和上一次时间,位移,位移差，时间差
+			包裹监听end
+				定义最后一次瞬时速度  最后一次位移差/时间差
+				定义新距离=CSS ul位移 +速度放大200
+				定义动态时间  绝对值速度的。2倍    (速度值大概在。3~2之间)
+				限制动画时间不能小于。3
+				若新距离>0 让距离为0
+				定义bezer="cubic-bezier(.19,1.38,.52,1.32)";
+				若<右边极限值  =minx
+				动画样式=时间加bezer  若不进入判断的bezer为空串
+				条用CSS
+	8,导航点击改变(防误操作)changeNav无参或changColor
+		时间委派去父元素,目标
+		定义鼠标起始位置
+		父元素监听start
+			跟新鼠标起始位置
+			this。ISmove=false
+		监听move
+			取当前鼠标位置
+			判断ismove和位移差》2认为是move
+				this。ISmove=true
+		监听end
+			取事件对象ev。changedtouches【0】。target
+			如果不是移动
+				遍历去除目标的class
+				判断目标的nodename转大写是否li或A
+				目标加激活样式
+	9无缝滑屏seamless
+		创建style
+		取包裹层,ul，小圆点，图片
+		核心 list.innerHTML+=list.innerHTML；
+		定义定时器
+		动态加载cssText2个width1个height
+		heiht延时20ms加载,appendchild
+		仿抖动
+		定义元素和鼠标起始位置，{}
+		定义首次操作isF，isX
+		定义now
+		初始化手指移动距离disx，disy
+		定义一个变量为translate变换类型
+		包裹监听start
+			取手指列表,重置isF，isX
+			清除定时器
+			动画none
+			实现无缝
+				取元素起始位置CSS
+				now=四舍五入-left/视口
+				如果now==0让now等于小圆点长度
+				如果now==li的长度-1让now等于小圆点的长度-1
+				条用内部的simple函数,1参对象,2参变换类型,3参当前now值,4参动画时间
+				调用玩后在取元素的当前left值
+		监听move
+			如果是横向操作，放
+			跟新鼠标和手指位置和差值
+			判断是否第触屏,必然是，因为每次strat都会重置
+				进入后马上修改isF为假
+				判断Y与X的距离
+					进入设置横向为假，即本次为竖向操作
+					返回
+			如果返回了就不会执行以下的元素位移变换
+			调用CSS，位移上次的距离+x的差值
+		监听end
+			取元素左位置
+			四舍五入now=-left/视口
+			如果now《0让弄完=0，不让其跳转到左边留白位置
+			如果now》li的长度-1，让now=li的长度-1  限制2边空白
+			条用simple  。5秒过度X位移
+			同步span 用延时器30ms
+				遍历去除目标的class
+				now%目标长度加class
+			auto()开启自动轮播
+			simple函数
+				(obj,type,num,delay)
+				obj。style.transition=delay;
+				var move=-num*视口宽度
+				CSS。。
+			一上来开启auto()
+				time=setINt（function(){
+					如果now==li长度-1 让now=span长度-1
+					条用simple   none
+				}）
+					延时器 20
+						now++
+						simple  。5s   
+						延时器同步且延时span  600
+							遍历去除目标的class
+							now取模加class
+	10.切换选项卡 changTab
+		取tab里的导航和内容包裹
+		定义位移基准 =导航宽度
+		遍历所有内容包裹
+			调用move函数  参1，包裹对象，参2，导航对象
+		自定move函数--2个参数，对象
+			取loding,小绿, 导航下的a连接
+			定义now=0      右滑now-1  左滑now+1
+			初始化调整位置，让中间的ul显示
+			CSS  包裹，X位移，基准值
+			仿抖动
+			元素位置，鼠标位置，isF，isX，disX，disY，isLoad=false
+			包裹监听starat
+				判断isload 为真，之间return
+				取消动画时间
+				初始化上面定义的值，
+				isF，isX
+			监听move
+				判断isload 为真，之间return
+				不是横向滑屏也直接return
+				求差
+				第一次真
+					isF为假
+					Y》x
+					isX为假
+					return
+				CSS  原先位置加位移
+				如果手指位移差大于屏幕一半
+					执行end函数-传手指位移差值进来
+			监听end
+				isL return
+				取各种差
+				判断x方向的手指位移是否《屏幕一半
+					归位 动画。5s
+			大于2分之1跳转end函数
+				重置isload为真,不允许再操作
+				如果dixX是正值则为向右滑动，让now-1
+				var dir=dixX/math.abs(disx)
+				var target=dir>0?0:-2*translateX；
+				wrap动画。5
+				CSS target
+				向右滑 now-1
+				now -= dir
+				无缝
+				if now《0
+					now=a的长度-1
+				else if now》a的长度-1
+					now=0
+				解绑过渡结束事件
+					wrap.addEventListener("transitionend",transitionend);
+					wrap.addEventListener("webkitTransitionEnd",transitionend);
+			定义过渡结束的回调
+				上来先自杀,removeEvent
+				让小鹿动起来
+				CSS  a【now】.offsetleft
+				遍历所有的loading，让其显示
+				发ajax 
+				setTime
+					isload=false
+					编译loading隐藏
+					CSS包裹归位-translateX
+					动画无
+					

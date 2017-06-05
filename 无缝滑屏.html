@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			html,body{
+				height: 100%;
+				overflow: hidden;
+			}
+			.wrap{
+				position: relative;
+			}
+			.ul_wrap{
+				position: absolute;
+				overflow: hidden;
+				list-style: none;
+			}
+			.ul_wrap li{
+				float:left;
+			}
+			.ul_wrap li img{
+				width: 100%;
+				display: block;
+			}
+			.span_wrap{
+				position: absolute;
+				left: 0;
+				text-align: center;
+				height: 10px;
+				width: 100%;
+				bottom: 20px;
+			}
+			.span_wrap span{
+				border-radius: 50%;
+				background-color: #666;
+				display: inline-block;
+				height: 10px;
+				width: 10px;
+			}
+			.active{
+				background-color: green!important;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="wrap">
+			<ul class="ul_wrap">
+				<li>
+					<a href="javascript:;"><img src="img/1.jpg" /></a>
+				</li>
+				<li>
+					<a href="javascript:;"><img src="img/2.jpg" /></a>
+				</li>
+				<li>
+					<a href="javascript:;"><img src="img/3.jpg" /></a>
+				</li>
+				<li>
+					<a href="javascript:;"><img src="img/4.jpg" /></a>
+				</li>
+				<li>
+					<a href="javascript:;"><img src="img/5.jpg" /></a>
+				</li>
+			</ul>
+			<div class="span_wrap">
+					<span class="active"></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/transform.js">
+		
+	</script>
+	<script type="text/javascript">
+		window.onload=function(){
+			var wrap=document.querySelector('.wrap');
+			var ulwrap=document.querySelector('.ul_wrap');
+			var spanwrap=document.querySelector('.span_wrap');
+			var spans=document.querySelectorAll('.span_wrap span');
+			var imgs=document.querySelectorAll('.wrap li img');
+			var cssNode=document.createElement('style');
+			var cssText='.ul_wrap{width:'+imgs.length+'00%}';
+			cssText+='.ul_wrap li{width:'+100/imgs.length+'%}';
+			setTimeout(function(){
+				cssText+='.wrap{height:'+imgs[2].offsetHeight+'px}';
+				cssNode.innerHTML+=cssText;
+				document.head.appendChild(cssNode);
+			},20)
+			var start={};
+			var elem={}
+			var docWidth=document.documentElement.clientWidth;
+			var isF=true;
+			var isX=true;
+			var now=0;
+			var disX=0;
+			var disY=0;
+			var x='translateX';
+			wrap.addEventListener('touchstart',function(ev){
+				clearInterval(time);
+				ev=ev||event;
+				isF=true;
+				isX=true;
+				var touch=ev.changedTouches[0];
+				start.x=touch.clientX;
+				start.y=touch.clientY;
+				var left=CSS(ulwrap,'translateX');
+				now=Math.round(-left/docWidth);
+				if(now==0){
+					now=spans.length-1;    //now为每个图片的号码 号码等于0是让号码等于4
+				}else if(now==spans.length-1){
+					now=spans.length-1     //now为每个图片的号码 号码等于4是让号码等于4
+				}
+				simple(ulwrap,'translateX',now,"none");
+				elem.x=left;
+			})
+			wrap.addEventListener('touchmove',function(ev){
+				if(!isX){
+					return;
+				}
+				ev=ev||event;
+				var touch=ev.changedTouches[0];
+				var nowS={}
+				nowS.x=touch.clientX;
+				nowS.y=touch.clientY;
+				disX=nowS.x-start.x;
+				disY=nowS.y-start.y;
+				if(isF){
+					isF=false;
+					if(Math.abs(disY)-Math.abs(disX)>0){
+						isX=false;
+						return
+					}
+				}
+				CSS(ulwrap,x,elem.x+disX);
+			})
+			wrap.addEventListener('touchend',function(){
+				var left=CSS(ulwrap,x);
+				now=Math.round(-left/docWidth);
+				if(now==0){
+					now=0;
+				}else if(now>spans.length-1){
+					now=spans.length-1;
+				}
+				simple(ulwrap,x,now,".5s");
+				setTimeout(function(){
+					for(var i=0;i<spans.length;i++){
+						spans[i].className='';
+					}
+					console.log(spans,spans.length)
+					console.log(now)
+					spans[now%spans.length].className='active';
+				},30)
+//				auto();
+			})
+//			auto();
+			var time;
+			function auto(){
+				time=setInterval(function(){
+					if(now==spans.length-1){
+						now=spans.length-1
+						simple(ulwrap,x,now,"none");
+					}
+					setTimeout(function(){
+						now++
+						simple(ulwrap,x,now,".5s");
+							setTimeout(function(){
+									for(var i=0;i<spans.length;i++){
+										spans[i].className='';
+									}
+									console.log(spans.length)
+									spans[now%spans.length].className='active';
+							},600);
+					},20)
+				},1000)
+			}
+			function simple(obj,transformType,nowNum,delay){
+				obj.style.transition=delay;
+				var move=-nowNum * document.documentElement.clientWidth;
+				transformCss(obj,transformType,move);
+			}
+		}
+	</script>
+</html>

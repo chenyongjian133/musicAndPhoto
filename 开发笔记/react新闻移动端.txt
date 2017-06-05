@@ -1,0 +1,275 @@
+reactnews移动端的响应式
+下载
+	npm i -g creat-react-app
+	create-react-app react_news
+	npm i antd --save
+	npm i react-router@3 --save
+	npm i react-responsive --save
+	npm i axios --save
+	npm run eject
+	npm i babel-plugin-import --save-dev
+	修改config配置文件
+	plugins: [
+		  ['import', [{ libraryName: "antd", style: 'css' }]]
+		]，
+		
+		
+	index文件引入 react reactdom router route indexroute hashhistory
+		移动端引入 import MediaQuery from 'react-responsive'
+		引入JS文件 mobileapp mobilenewscontainer mobilenewsdetail mobileusercenter  PC端也是4份
+		
+	渲染
+		ReactDOM.render((
+			<div>
+				<MediaQuery query='(min-device-width:1224px)'>
+					<Router history={hashhistory}>
+						<Route path='/' component={App}></Route>
+							<IndexRoute  component={NewsContainer}></IndexRoute>
+							<Route path='/detail/:uniquekey' component={NewsDetail} />
+							<Route path='/user_center' component={UserCenter} />
+					</Router>
+				</MediaQuery>
+				<mediaQuery query='(max-device-width:1224px)'>
+					<Router history={hashhistory}>
+						<Route path='/' component={MobileApp}></Route>
+							<IndexRoute  component={MobileNewsContainer}></IndexRoute>
+							<Route path='/detail/:uniquekey' component={MobileNewsDetail} />
+							<Route path='/user_center' component={MobileUserCenter} />
+					</Router>
+				</mediaQuery>
+			</div>
+						
+		),doc.getelebYid(root))
+		
+	
+
+	mo_app引入react，{component} form react	
+			引入mo——头和mo尾文件
+			引入mob。css文件
+	渲染
+		div
+			头
+			{this.props.children}
+			尾
+		
+		
+	
+	mo头  引入图标，页签，表单，输入框，按钮，对话框，提示信息（7个）
+			link axios  logo from ‘logo.png’
+			
+			初始化 用户名，用户id，对话框是否可见
+			挂载
+				if（localStorage.userId）{
+					this.setState({
+						用户名
+						用户ID
+					})
+				}
+			
+			对话框是否显示方法show-参数show
+			
+			提交注册/登录方法-regist，event
+				阻止默认
+				确定登录还是注册
+				得到表单数据
+				用户名，密码 确认密码 this.props.form.getFieldsValue()
+				const url = "http://newsapi.gugujiankong.com/Handler.ashx?action=" + action
+							  + "&username="+formData.userName+"&password="+formData.password
+							  +"&r_userName=" + formData.r_userName + "&r_password="
+							  + formData.r_password + "&r_confirmPassword="
+							  + formData.r_confirmPassword
+				axios请求    返回对象
+					清空表单
+					判断注册
+						注册成功
+					判断登录
+						失败 提示
+						成功 提示
+							设本地记录
+							跟新用户名，用户id状态
+				跟新状态对话框隐藏			
+		
+				登录方法
+					login=()=>{
+						this.setModalVisible(true);
+					}
+		
+		渲染
+			定义this.props.form的getFieldDecorator方法
+			取用户名
+			判断用户名是否已经登录
+			const userShow=userName
+					?(Link to='/usercenter')
+						Icon type='inbox'
+					:Icon type='setting' onClick={this.login.bind(this)}		
+		真正渲染
+			div#mobileheader
+				header
+					a href=‘/’  让reactnews调回首页
+					img src=logo
+					span ReactNews
+					{userShow}
+				Modal title=‘用户中心’ visible={this.state.visible} 当前是否可以见
+					onOk={this.show.bind(this.false)}
+					onCancel={this.show.bind(this.false)}
+					okText='Cansel'
+					wrapClassName='vertical-center-modal'>
+					Tabs type='card' onTabClick={()=>this.props.form.resetFields()}
+						TabPane tab='登录' key=1
+							Form horizontal onSubmit={this.handleSubmit.bind(this,false)}
+								FormItem label='账号'
+									{
+										getFieldDecorator('username')(
+											Input type placeholder
+										)
+									}
+								FormItem label='密码'
+									{
+										getFieldDecorator('password')(
+											Input type placeholder
+										)
+									}
+								Button zhu htmlType 登录
+								
+						TabPane tab='登录' key=1
+							Form horizontal onSubmit={this.handleSubmit.bind(this,true)}
+								FormItem label='账号'
+									{
+										getFieldDecorator('r_username')(
+											Input type placeholder
+										)
+									}
+								FormItem label='密码'
+									{
+										getFieldDecorator('r_password')(
+											Input type placeholder
+										)
+									}
+									FormItem label='密码'
+									{
+										getFieldDecorator('rc_password')(
+											Input type placeholder
+										)
+									}
+								Button zhu htmlType 注册
+			暴露 Form.create()()
+		
+		
+		
+	mo图片模块引入react card link axios	(4个)
+			初始化新闻和图片 newsArr
+			将挂载
+				取父对象传过来的type，count
+				发请求
+				url = `http://newsapi.gugujiankong.com/Handler.ashx?action=getnews&type=${type}&count=${count}`
+			axios  返回数组
+				成工-更新newsArr
+				
+	渲染
+		取newsArr
+		判断newsArr长度
+		const newsList=newsArr.legth
+		?newsArr.map((item,index)=>{
+			<Card key className="m_article list-item special_section clearfix"
+				Link to={`news_detail/${item.uniquekey}`}
+					div className="m_article_img"
+						img src={item.thumbnail_pic_s} alt={item.title} 
+					div className="m_article_info"
+						div className="m_article_title"
+							span{item.title}
+						div className="m_article_desc clearfix"
+							div className="m_article_desc_l"
+								<span className="m_article_channel">{newsItem.realtype}</span>
+								<span className="m_article_time">{newsItem.date}</span>
+		:没有加载到任何新闻'
+	真实渲染
+		div
+			{newsList}	
+	限制属性传入类型
+	MobileNewsBlock.propTypes = {
+	  type: React.PropTypes.string.isRequired,
+	  count: React.PropTypes.number.isRequired,
+	}
+					
+						
+						
+	mo——container 引入react 图片块 4张轮播图
+					antd的轮播，页签
+						
+	直接渲染
+		Tabs
+			TabPane tab='头条' key=top
+				div style{width:100%}
+					Carousel autoplay infinite  自动无限播放
+						div img src=img1 4分
+							
+				MobileNewsBlock count={20} type='top'
+			TabPane tab=社会 key=shehui
+				<MobileNewsBlock count={20} type="shehui"/
+			 <TabPane tab="国内" key="guonei">
+				<MobileNewsBlock count={20} type="guonei"/>
+			</TabPane>
+			<TabPane tab="国际" key="guoji">
+			  <MobileNewsBlock count={20} type="guoji"/>
+			</TabPane>
+			<TabPane tab="娱乐" key="yule">
+			  <MobileNewsBlock count={20} type="yule"/>
+			</TabPane>
+
+			
+	mo详情 引入react axios	BackTop
+			引入评论模块，共用PC端的那份
+				
+			初始化news：‘’
+			
+			挂载完毕componentDidMount
+					取父组件传过来的请求id(this.props.params)
+					const url = `http://newsapi.gugujiankong.com/Handler.ashx?action=getnewsitem&uniquekey=${uniquekey}
+					发请求成功跟新news
+					document.title = news.title + " - React News | React驱动的新闻平台";
+		
+	渲染
+		div
+			div className='mobileDetailsContainer'
+				dangerouslySetInnerHTML={{__html:this.state.news.pagecontent}}
+			hr/
+			//传文章ID到评论模块
+			NewsComment newsId={this.props.params.news_id}
+			BackTop
+		
+		
+	评论模块直接共用PC的	
+		
+		
+		
+	用户中心 引入react link axios  antd的页签，卡片	
+			初始化 收藏列表，评论列表
+			挂载完毕
+			let url = "http://newsapi.gugujiankong.com/Handler.ashx?action=getuc&userid=" + JSON.parse(localStorage.getItem('user_key')).userId
+			请求成功跟新收藏列表状态	
+			"http://newsapi.gugujiankong.com/Handler.ashx?action=getusercomments&userid=" + JSON.parse(localStorage.getItem('user_key')).userId
+			请求成功跟新评论列表状态
+	
+	渲染
+		解构状态所有属性
+		判断收藏列表长度
+		const userCollectionsList=userCollections.length
+		?userCollections.map((it,i)=>{
+			Card key title={i.uniquekey} extra={link to={`/news_detail/${i.uniquekey}`}查看</link}
+				p{i.Title}
+		})
+		:'您还没有收藏任何的新闻，快去收藏一些新闻吧。
+		const userCommentsList=userComments.length
+		?userComments.map((c,i)=>{
+			Card key title={`与：${c.datetime}评论了文章：${c.uniquekey}`} extra={link to={`/news_detail/${c.uniquekey}`}查看link}
+			p {c.Coments}
+		})
+		:'您还没有发表过任何评论
+	真实渲染	
+		div
+			 Tabs
+				TabPane tab='我的收藏列表' key style={{padding:'10px'}}
+					{userCollectionsList}
+				TabPane tab='我的评论列表 key style={{padding:'10px'}}
+					{userCommentsList}
+				<TabPane tab="头像设置" key="3"></TabPane>

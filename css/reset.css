@@ -1,0 +1,38 @@
+h1,h2,h3,h4,h5,ul,li,body,html{
+	padding: 0;
+	margin: 0;
+	font-family:'Microsoft Yahei', "hiragino sans gb", Helvetica, Arial, "\5b8b\4f53", 'sans-serif';
+}
+/*禁止系统滚动条*/
+html,body{
+	height: 100%;
+	overflow: hidden;
+}
+ul{
+	list-style: none;
+}
+/*取消下划线,改变点击时候的高亮颜色为透明*/
+a{
+	text-decoration: none;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);   
+}
+/*消除连接图片底部的3px缝隙*/
+img{
+	display: block;
+}
+/*清除外发光和IOS下的圆角过分大*/
+input{
+	border: none;
+	outline: none;
+	-webkit-appearance: none;
+}
+.clearfix{
+	*zoom:1;
+}
+.clearfix:after{
+	content: '.';
+	display: block;
+	clear: both;
+	height: 0;
+	opacity: 0;
+}

@@ -1,0 +1,94 @@
+初始化请M,P
+清图片3px,小点，下划线
+禁滚动条
+头:高2rem，字体。8rem，行高2rem，宋体，helvetica，居中，字体颜色白色,背景黑色。8透明
+包裹section 绝对定位,top：2rem，其他0，overflow：hidden
+ul，overflow;hidden
+li，动态创建,左浮,宽高7rem，外边距。5rem，背景图loading,背景位置center
+img：宽度100%，圆角10px，透明，过渡效果2s，opacity
+footer：绝对定位，宽100%，高8rem，行高，居中，透明
+滚动条 绝对定位，top-2rem，右边0，宽度4px，高度100%，背景色，opacity0，过渡1s opacity，z-index999
+header
+	section
+		div inner
+			ul
+			footer
+		scrollbar
+
+ev。preventdefault
+适配
+window.onload
+	取所有元素,关键是li
+	取拖拽元素的最大滑动距离
+	定义isBottom假
+	定义onlyOne为真用作进入自定义组件的函数执行
+	初始化图片数组，30张
+	把footer的放大初始为0
+	
+	定义每次创建li的数量12  length
+	定义遍历的起始位置， start
+	定义遍历的结束位置 end
+	
+	定义创建li的函数createLI
+		加载完最后一组的滑动操作
+		如果onlyone和开始位置大于等于图片数组长度都为真
+			改变footer的内容
+			
+			条用延时器让最后一次提示停留一段时间，然后过渡收回底部
+			CSS（滑动元素，Y，-最大滑动距离）
+			footer内容清空；‘’
+			footer放大变回0
+			
+			onlyone变为false
+			retruen
+		
+		footer放大变为0
+		end=start+length
+		end=end>imgArr.length?imgArrl.length:end;
+		for i=start;i<end;i++
+			创建li
+			为li打标记scr=图片数组当前索引
+			把li添加到ul上
+		更新start值
+		start=end
+		条用懒加载
+		
+	定义懒加载lazyload
+		定义要加载的最小和最大区域
+		遍历li节点
+			取每个li的上边距离getBoundingClientReact。top
+			如果top值在最小和最大区域且没加载过就进入
+				条用创建图片函数
+				为每个li是否加载过打标记
+				
+	定义创建图片函数
+		new Image()
+		img.src=li.src
+		添加图片到li中
+		img.onload
+			图片opactiy=1
+			
+	自定义组件函数callback
+		start：function
+					if！onlyone  直接ruture
+					
+					滑动元素的过渡至为none
+					重新取最大滑动距离的值
+					判断当前滑动元素的滑动距离是否大于等于最大滑动距离
+						是就把isBottom  变为ture
+					反之   isBottom为false
+		move：functon
+					if！onlyone  直接ruture
+					调用懒加载
+					如果isBottom为真
+						定义footer的放大系数，元素的超出最大滑动距离的值比上footer的课件高
+						控制放大系数必须在0-1直接
+						CSS 脚部放大为原来
+						footer。opacity=scale
+		end：fucntion
+					if！onlyone  直接ruture
+					如果isBottom和元素的超出最大滑动距离的值大于等于footer的可见高
+						清掉tree算法
+						调用创建li函数
+						
+	条用滑屏函数

@@ -1,0 +1,349 @@
+@r:67.5rem;
+#wrap{
+    position: relative;
+    height: 100%;
+    background: #eee;
+}
+#header{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: #232323;
+    z-index: 998;
+}
+//头部上半部分高度:135
+#header #head{
+    height: 135/@r;
+}
+//log 左右内边距:17px 上内边距:26px 下内边距:21px 左浮布局让面包按钮上来
+#header #head #logo{
+    padding: 26/@r 17/@r 21/@r 17/@r;
+    float: left;
+}
+//log 图片大小:240px * 88px
+#logo img{
+    width: 240/@r;
+}
+//菜单元素    129 * 135  雪碧图大小:82 * 233 a元素要浮动才能给高宽
+#menuBtn{
+    width: 129/@r;
+    height: 135/@r;
+    float: left;
+    background: url(../img/menuBtn.png) no-repeat;
+    background-size: 82/@r 233/@r;
+}
+//背景图偏移位置(关闭): center 16  优先级不够,要给important
+.menuBtnClos{
+    background-position: center 16/@r!important;
+}
+.menuBtnOpen{
+    background-position: center -120/@r!important;
+}
+//按钮容器:上内边距   21
+#btns{
+    padding: 21/@r 0 0 0;
+    float: right;
+}
+//  登录/注册按钮:(注意内联元素,需要浮动)按钮大小: 111 * 78,行高:78,背景色 :#690,字体颜色: #ccc,右外边距: 15px, 字体大小: 42,文本居中,圆角:8
+#btns a{
+    float: left;
+    width: 111/@r;
+    height: 78/@r;
+    background: #690;
+    line-height: 78/@r;
+    text-align: center;
+    color: #ccc;
+    font-size: 42/@r;
+    margin-right: 15/@r;
+    border-radius: 8/@r;
+}
+//  小搜索按钮:按钮大小: 130 * 88,行高:88,字体颜色: #fff,右外边距: 30px,上外边距: 3px, 字体加粗, 圆角:10
+#btns #searchBtn{
+    width: 130/@r;
+    height: 88/@r;
+    line-height: 88/@r;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 10/@r;
+    margin-right:30/@r ;
+    margin-top: 3/@r;
+}
+//搜索区: 高   :103;上下左右内边距:16;       
+#search{
+    height: 103/@r;
+    padding: 16/@r;
+} 
+//输入框:(注意boxsizing!!!) 829*103 bg#999 上下内边距: 5 左右内边距: 10,边框: 1px solid #5a5a5a;(input输入框我们一般都会加1px边框)
+//      字体大小 : 41,字体颜色: #333, 圆角:15
+#search input[type='text']{
+    box-sizing: border-box;
+    width: 829/@r;
+    height: 103/@r;
+    background: #999;
+    padding: 5/@r 10/@r;
+    font-size: 41/@r;
+    color: #333;
+    border-radius: 15/@r 0 0 15/@r;
+    float: left;
+    border: 1px solid #5A5A5A;
+}
+#search input[type=text]::-webkit-input-placeholder{
+    color: gold;
+}
+#search input[type=text]:focus{
+    background: #fff;
+}
+//大搜索按钮203*103，边框:清除边框， 背景颜色: #414040;字体颜色: #fff;圆角: 15;字体大小 : 41
+#search input[type=submit]{
+    width: 203/@r;
+    height: 103/@r;
+    background: #414040;
+    color: #fff;
+    border-radius: 0 15/@r 15/@r 0;
+    font-size: 41/@r;
+    float: right;
+}
+//定位层: 宽度       :100%， 绝对定位top : 135，上下内边距     : 10， 上边框: 1px solid #6a6a6a ，背景颜色:rgba(0, 0, 0, .8)
+#mask{
+    width: 100%;
+    position: absolute;
+    z-index: 99;
+    padding: 10/@r 0;
+    background: rgba(0,0,0,.8);
+    top:140/@r;
+    display: none;
+}
+//1px物理边框
+#mask:before{
+    content: '';
+    display: block;
+    height: 1px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top:-1px;
+    background: #6A6A6A;
+    transform: scaleY(.5);
+}
+//  定位层元素:宽度  : 22.5%， 高度:135， 行高:135， 字体大小:54，文本居中 
+#mask li{
+    float: left;
+    width: 22.5%;
+    height: 135/@r;
+    line-height: 135/@r;
+    font-size: 54/@r;
+    text-align: center;
+}
+#mask li a{
+    color: #fff;
+}
+//内容区样式
+#content{
+    position: absolute;
+    top:270/@r;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+//导航高177,P上31，下14,boxsizing,border：1
+#navs{
+    height: 177/@r;
+    padding: 31/@r 0 14/@r 0;
+    box-sizing: border-box;
+    background: #eee;
+    position: relative;
+}
+//底部1px的边框,父元素不能清浮动.不然效果会和.clearfix:after冲突
+#navs:after{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    transform: scaleY(.5);
+    background: #7E8C8D;
+}
+//ul浮动可以自动获取子元素的宽度,white-space阻止内联子元素换行,font-size：0清除内联元素3px间隙
+#navs ul{
+    float: left;
+    white-space: nowrap;
+    font-size: 0;
+}
+//  导航元素: 高:129  左右内边距:38 ,转为inline-block可以排一行且可被父元素影响不换行
+#content #navs ul li{
+    height: 129/@r;
+    line-height: 129/@r;
+    padding: 0 38/@r;
+    display: inline-block;
+    font-size: 1rem;
+}
+#content #navs ul .active{
+    background-color: #690;
+}
+#navs ul li a{
+    color: #020202;
+}
+#navs ul .active a{
+    color: #fff;
+}
+//无缝滑屏
+#pic_wrap{
+    position: relative;
+}
+#pic_list{
+    position: absolute;
+    overflow: hidden;
+}
+#pic_list li{
+    float: left;
+}
+#pic_list li img{
+    width: 100%;
+}
+#pic_wrap .pic_nav{
+    position: absolute;
+    left: 0;
+    bottom: 3/@r;
+    width: 100%;
+    text-align: center;
+}
+#pic_wrap .pic_nav span{
+    display: inline-block;
+    width: 25/@r;
+    border-radius: 25/@r;
+    height: 25/@r;
+    background: url(../img/taobao.png) no-repeat;
+    background-position: -3px -3px;
+}
+#pic_wrap .pic_nav .pic_active{
+    background-position: -3px -19px;
+}
+//选项卡样式1046px 背景色:#fff 居中
+#test{
+    position: relative;
+}
+.tab{
+    width: 1046/@r;
+    background: #fff;
+    margin: 0 auto;
+    overflow: hidden;
+}
+#test:before{
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    top:0px;
+    background: #7E8C8D;
+    transform: scaleY(.5);
+}
+//  头部高度:135 头部行高：135
+.tab_h{
+    height: 135/@r;
+    line-height: 135/@r;
+}
+.tab_h h2{
+    float: left;
+    font-size: 1rem;
+}
+.tab_h a{
+    float: right;
+    color: #000;
+    font-size: .6rem;
+}
+//  导航行高:105 导航高度:105
+.tab .tab_navs{
+    height: 105/@r;
+    line-height: 105/@r;
+    position: relative;
+    width: 100%;
+}
+//  导航元素高度:105 宽度:120 字体大小:44 文本居中  字体颜色:#6b6b6b;
+.tab .tab_navs a{
+    height: 105/@r;
+    width: 120/@r;
+    font-size: 44/@r;
+    text-align: center;
+    color: #6B6B6B;
+    float: left;
+}
+//  底部标识: 宽: 120;   高: 9px  背景颜色: #6f900d;
+.tab_navs span{
+    width: 120/@r;
+    height: 9/@r;
+    background: #6F900D;
+    position: absolute;
+    left: 0;
+    bottom: 8/@r;
+    transition: .5s;
+}
+.tab .tab_wrap{
+    width: 300%;
+    overflow: hidden;
+}
+.tab .tab_wrap ul {
+    overflow: hidden;
+    float: left;
+    width: 33.33333333333333333333%;
+}
+//  主体内容元素: box-sizing: border-box; 宽:506  外边距:8  内边距:5 字体大小:40 背景颜色:#efefef 字体颜色:#000
+.tab .tab_wrap ul li{
+    box-sizing: border-box;
+    float: left;
+    width: 506/@r;
+    margin: 8/@r;
+    padding: 5/@r;
+    font-size: 40/@r;
+    background: #EFEFEF;
+}
+.tab .tab_wrap ul li a{
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.tab .tab_wrap ul li a img{
+    width:100%;
+}
+.tab .tab_wrap ul li a span{
+    color: #000;
+}
+//雪碧图 内联块，居中宽高
+.tab_ice_l_pic{
+    vertical-align: middle;
+    display: inline-block;
+    width: .6rem;
+    height: .6rem;
+    background: url(../img/ice.png) no-repeat;
+}
+.tab_ice_r_pic{
+    vertical-align: middle;
+    display: inline-block;
+    width: .6rem;
+    height: .6rem;
+    background: url(../img/ice.png) no-repeat;
+    background-position:0 -0.8rem;
+}
+.tab_ice_l,.tab_ice_r{
+    float: left;
+}
+.loading{
+    height: 101/@r;
+    background: url(../img/loading.gif) no-repeat center center;
+    opacity: 0;
+}
+//滚动条
+#scrollBar{
+    position: absolute;
+    right: 0;
+    top:0;
+    width: 4px;
+    height: 100%;
+    z-index: 999;
+    background: #6A6A6A;
+    opacity: 0;
+    transform:2s opacity;
+}

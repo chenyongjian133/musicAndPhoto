@@ -1,0 +1,32 @@
+/*动画移动Y方向到0,透明度变1,变块*/
+@keyframes mytranslateY{
+	100%{
+		opacity: 1;
+		display: block;
+		transform: translateY(0);
+	}
+}
+/*动画从先大后小*/
+@keyframes myscale {
+	0% {
+		transform: scale(1.6);
+	}
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+@keyframes to_width {
+	0% {
+		width: 0%;
+		opacity: 0;
+	}
+	50% {
+		width: 40%;
+		opacity: .5;
+	}
+	100%{
+		width: 80%;
+		opacity: 1;
+	}
+}

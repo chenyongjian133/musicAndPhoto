@@ -1,0 +1,223 @@
+(function(w){
+	w.css=function (node,type,val){
+			if(!node.transforms){
+				node.transforms={};
+			}
+			if(arguments.length>2){
+				// 写操作
+				var text="";
+				node.transforms[type]=val;
+				for(item in node.transforms){
+					//以单位分类
+					switch (item){
+						case "skewX":
+						case "skewY":
+						case "skew":
+						case "rotate":
+							text += item+"("+node.transforms[item]+"deg) ";
+							break;
+						case "scale":
+						case "scaleX":
+						case "scaleY":
+							text += item+"("+node.transforms[item]+") ";
+							break;
+						case "translate":
+						case "translateX":
+						case "translateY":
+						case "translateZ":
+							text += item+"("+node.transforms[item]+"px) ";
+							break;
+					}
+				}
+				node.style.transform = node.style.webkitTransform = text;
+			}else{
+				//读操作
+				val = node.transforms[type];
+				if(typeof val =="undefined"){
+					if(type=="scale"||type=="scaleX"||type=="scaleY"){
+						val=1;
+					}else{
+						val=0;
+					}
+				}
+				return val;
+			}
+		}
+	w.damu=Object.create(null);
+	
+	
+	/*拖拽组件 （解耦合）
+	 * 	快速滑屏
+	 * 	即点即停
+	 * 	防抖动
+	 * 	带滚动条
+	 * */
+	w.damu.drag=function (wrap,callback){
+		
+		var Tween = {
+			Linear: function(t,b,c,d){ return c*t/d + b; },
+			Back: function(t,b,c,d,s){
+	            if (s == undefined) s = 1.70158;
+	            return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
+	       },
+	       Quad:function(t,b,c,d){
+	            return -c *(t/=d)*(t-2) + b;
+	       },
+	       Quint: function(t,b,c,d){
+	            return c*((t=t/d-1)*t*t*t*t + 1) + b;
+	        }
+		}
+		
+		var item = wrap.children[0];
+		css(item,"translateZ",0.1);
+		var elementPoint = {x:0,y:0};
+		var startPoint = {x:0,y:0};
+		var minY = wrap.clientHeight - item.offsetHeight;
+		var lastTime =0;
+		var lastPoint=0;
+		var timeDis = 1;
+		var pointDis =0;
+		
+		var isFirst=true;
+		var isY = true;
+		
+		wrap.addEventListener("touchstart",function(ev){
+			
+			//兼容dom的绘制
+			minY = wrap.clientHeight - item.offsetHeight;
+			
+			//即点即停
+//			clearInterval(wrap.clearTime);
+			ev=ev||event;
+			var touchC = ev.changedTouches[0];
+			item.style.transition="none";
+			
+			elementPoint.x=css(item,"translateX");
+			elementPoint.y=css(item,"translateY");
+			startPoint.x=touchC.clientX;
+			startPoint.y=touchC.clientY;
+			
+			lastTime = new Date().getTime();
+			lastPoint = css(item,"translateY");
+			pointDis=0;
+			
+			isFirst=true;
+			isY = true;
+			
+			if(callback && typeof callback["start"] ==="function"){
+				callback["start"]();
+			}
+		})
+		wrap.addEventListener("touchmove",function(ev){
+			if(!isY){
+				return;
+			}
+			
+			
+			ev=ev||event;
+			var touchC = ev.changedTouches[0];
+			var movePoint ={x:0,y:0};
+			movePoint.x=touchC.clientX;
+			movePoint.y=touchC.clientY;
+			var dis={x:0,y:0};
+			dis.x = movePoint.x - startPoint.x;
+			dis.y = movePoint.y - startPoint.y;
+			
+			var translateY =elementPoint.y+dis.y;
+			var scale=0;
+			if(translateY>0){
+				scale = document.documentElement.clientHeight/(document.documentElement.clientHeight+translateY);
+				translateY = elementPoint.y+(dis.y*scale);
+			}else if(translateY<minY){
+				var space = minY - translateY;
+				scale = document.documentElement.clientHeight/(document.documentElement.clientHeight+space);
+				translateY = elementPoint.y+(dis.y*scale);
+			}
+			
+			
+			if(isFirst){
+				isFirst=false;
+				if(Math.abs(dis.y)<Math.abs(dis.x)){
+					isY=false;
+					return;
+				}
+			}
+			
+			
+			css(item,"translateY",translateY);
+			var nowTime = new Date().getTime();
+			var nowPoint = css(item,"translateY");
+			timeDis = nowTime - lastTime;
+			pointDis = nowPoint -lastPoint;
+			lastTime = nowTime;
+			lastPoint = nowPoint;
+			
+			//普通滑屏
+			if(callback && typeof callback["move"] ==="function"){
+				callback["move"]();
+			}
+		})
+		wrap.addEventListener("touchend",function(){
+			var speed = pointDis / timeDis;
+			var target = css(item,"translateY")+speed*200;
+			var time =  Math.abs(speed) *0.2;
+			time =time<0.3?0.3:time;
+//			var Bessel="";
+			var type ="Quint";
+			if(target>0){
+				target=0;
+				type ="Back";
+//				Bessel="cubic-bezier(.19,1.38,.52,1.32)";
+			}else if(target<minY){
+				target=minY;
+				type ="Back";
+//				Bessel="cubic-bezier(.19,1.38,.52,1.32)";
+			}
+//			item.style.transition=time*10+"s "+Bessel;
+//			css(item,"translateY",target);
+			move(target,time,type);
+			if(callback && typeof callback["end"] ==="function"){
+				callback["end"]();
+			}
+		})
+		
+		function move(target,time,type){
+			clearInterval(wrap.clearTime);
+			var t=0;
+			var b=css(item,"translateY");
+			var c=target-b;
+			var d=time/0.02;
+			var s=3;
+			wrap.clearTime=setInterval(function(){
+				
+				 /*
+				 * t:当前次数
+				 * b:初始位置
+				 * c:结束位置与初始位置之间的差值
+				 * d:总次数
+				 * s:回弹距离
+				 * 
+				 * */
+				t++;
+				if(t>d){
+					clearInterval(wrap.clearTime);
+					
+					//快速滑屏结束
+					if(callback && typeof callback["over"] ==="function"){
+						callback["over"]();
+					}
+				}else{
+					var point = Tween[type](t,b,c,d,s);
+					css(item,"translateY",point);
+					
+					//快速滑屏
+					if(callback && typeof callback["move"] ==="function"){
+						callback["move"]();
+					}
+				}
+				
+			},20);
+		}
+	}
+
+})(window)

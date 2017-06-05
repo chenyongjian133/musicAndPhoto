@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+		<title></title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			html,body{
+				overflow: hidden;
+				height: 100%;
+			}
+			#wrap{
+				position: relative;
+				height: 100%;
+				background: pink;
+			}
+			#bar{
+				position: absolute;
+				right: 0;
+				top: 0;
+				width: 4px;
+				height: 100%;
+				background: deeppink;
+				opacity: 0;
+				transition: 1s opacity;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<div id="item">
+				
+			</div>
+		</div>
+		<div id='bar'></div>
+	</body>
+	<script type="text/javascript" src="js/transform.js"></script>
+	<script type="text/javascript" src="js/slide.js"></script>
+	<script type="text/javascript">
+//		var wrap = document.querySelector("#wrap");
+//		var scorllEle = document.querySelector("#bar");
+//		var ulEle = document.querySelector("#item");
+		var text="";
+		for(var i=0;i<300;i++){
+			text+="nmx"+(i+1)+"<br/>";
+		}
+		item.innerHTML =text;
+		var a='wrap';
+		var b='item';
+		var c='bar'
+//		var scaleScroll = document.documentElement.clientHeight / ulEle.offsetHeight
+//		scorllEle.style.height = scaleScroll*document.documentElement.clientHeight+"px";
+////		var callback=bar(c);
+//		callback={
+//					start:function(){
+//						scorllEle.style.opacity=1;
+//					},
+//					move:function(){
+//						var scorlly = CSS(ulEle,"translateY")*scaleScroll;
+//						CSS(scorllEle,"translateY",-scorlly)
+//					},
+//					end:function(){
+//						scorllEle.style.opacity=0;
+//					}
+//				}
+		var cc={}
+		Qjian.xiaomei(a,b,c);
+		
+//		function drag(){
+//			var docWidth=document.documentElement.clientHeight;
+//			var navEle=document.querySelector('#wrap');
+//			var ulEle=document.querySelector('#item');
+//			CSS(ulEle,'translateZ',0.1)  //开启3D硬件加速，解决安卓手机的卡顿问题
+//			//初始化元素位置和手指位置
+//			var elementY=0;
+//			var startY=0;
+//			//初始化快速滑屏需要的参数
+//			var lastTime=0;
+//			var lastPoint=0;
+//			var timeDis=1;    //必须写不为0的数,不然会报0/0等于NAN的错误
+//			var pointDis=0;   //位移差
+//			var minY=navEle.clientHeight-ulEle.offsetHeight;
+//			navEle.addEventListener('touchstart',function(ev){
+//				ev= ev || event;
+//				var touchEle=ev.changedTouches[0];
+//				ulEle.style.transition='none';    //进来的时候不能有过度效果
+//				elementY=CSS(ulEle,'translateY');  //读取元素的位移位置
+//				startY=touchEle.clientY;           //读取手指的开始位置
+//				pointDis=0;                       //移动事件结束后重置位移差
+//			})
+//			navEle.addEventListener('touchmove',function(ev){
+//				ev= ev || event;
+//				var touchEle=ev.changedTouches[0];
+//				var nowY=touchEle.clientY;     //实时获取手指当前位置
+//				var disY=nowY-startY;          //实时获取手指移位差
+//				var translateY=elementY+disY;  //实时获取元素的位移大小
+//				var scale=0;
+//				//处理左边的橡皮筋效果,当用户想向右滑动,将scale控制在0~1之间
+//				if(translateY>0){
+//					//把*2去掉可以去除在最左边状态时-先左移动，然后再慢慢向右移动时候产生的回弹小bug
+//					scale=docWidth/(docWidth*2+translateY);   
+//					translateY=elementY+(disY*scale);
+//				}else if(translateY<minY){
+//					//处理右边橡皮筋,当左滑动到极限例-10,如果还想滑动例-20,所以translateY<minY
+//					//把*2去掉可以去除在最左边状态时-先左移动，然后再慢慢向右移动时候产生的回弹小bug
+//					scale=docWidth/(docWidth*2+minY - translateY);
+//					translateY=elementY+(disY*scale);
+//				}
+////				调用CSS函数
+//				CSS(ulEle,"translateY",translateY);
+//				var timeNow=new Date().getTime();
+//				//实时获取元素的移动位置
+//				var pointNow=CSS(ulEle,"translateY");
+//				timeDis=timeNow-lastTime;
+//				pointDis=pointNow-lastPoint;
+//				lastTime=timeNow;
+//				lastPoint=pointNow;
+//			})
+//			navEle.addEventListener('touchend',function(){
+//				//最后一次的平均速度,这个speed的值很小,需要乘以一个系数,例如200
+//				var speed=pointDis/timeDis;   
+//				console.log(speed);
+//				//事件结束时,获取元素最后一次的位置然后加上后补的速度偏移距离
+//				var target=CSS(ulEle,'translateY')+speed*200;
+//				//时间不能为负,限制时间过渡不能小于.3
+//				var time=Math.abs(speed)*.2
+//				time=time<.3?.3:time;
+//				console.log(time);
+//				var bezer='';
+//				if(target>0){
+//					target=0;
+////					console.log(111)
+////					ulEle.style.transition='.5s'
+//					bezer="cubic-bezier(.19,1.38,.52,1.32)";
+//				}else if(target<minY){
+//					target=minY;
+////					console.log(222)
+////					ulEle.style.transition='.5s'
+//					bezer="cubic-bezier(.19,1.38,.52,1.32)";
+//				}
+//				ulEle.style.transition=time+'s'+' '+bezer;
+//				CSS(ulEle,"translateY",target);
+//			})
+//		}
+	</script>
+</html>

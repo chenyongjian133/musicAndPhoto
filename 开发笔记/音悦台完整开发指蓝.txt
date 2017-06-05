@@ -1,0 +1,710 @@
+文档结构
+meta标签
+section id=wrap
+	header id=head
+		头部上部分
+		div id=headT
+			logo部分
+			h1 id=logo
+				a href=javascript:;
+					img src=logo
+			面包导航部分
+			a href=javascript:; id=menuBtn class=menuBtnClos
+			按钮排
+			div id=btns
+				a href=javascript id=searchBtn  搜索
+				a href=javascript 登录
+				a href=javascript 注册
+		搜索区
+		form id=search
+			input type=text placeholder=...
+			input type=submit value=搜索
+		浮层
+		ul id=mask
+			li a href=javascript 首页
+			<li><a href="javascript:;">MV</a></li>
+			<li><a href="javascript:;">悦单</a></li>
+			<li><a href="javascript:;">V榜</a></li>
+			<li><a href="javascript:;">音悦</a></li>
+			<li><a href="javascript:;">商城</a></li>
+			<li><a href="javascript:;">节目</a></li>
+			<li><a href="javascript:;">饭团</a></li>
+			<li><a href="javascript:;">资讯</a></li>
+			<li><a href="javascript:;">我的家</a></li>
+			<li><a href="javascript:;">APP下载</a></li>
+			<li><a href="javascript:;">热门应用</a></li>
+			
+	section id=content
+		div id=inner
+			可拖拽的导航
+			div id=navs
+				ul class=clearfix
+					li a href=javascript class=active 首页
+					<li><a href="javascript:;">MV</a></li>
+					<li><a href="javascript:;">悦单</a></li>
+					<li><a href="javascript:;">V榜</a></li>
+					<li><a href="javascript:;">音悦</a></li>
+					<li><a href="javascript:;">商城</a></li>
+					<li><a href="javascript:;">节目</a></li>
+					<li><a href="javascript:;">饭团</a></li>
+					<li><a href="javascript:;">资讯</a></li>
+					<li><a href="javascript:;">我的家</a></li>
+					<li><a href="javascript:;">APP下载</a></li>
+					<li><a href="javascript:;">热门应用</a></li>
+					<li><a href="javascript:;">晓飞张</a></li>
+					<li><a href="javascript:;">张晓飞</a></li>
+					<li><a href="javascript:;">张小飞</a></li>
+					<li><a href="javascript:;">张飞飞</a></li>
+					<li><a href="javascript:;">飞不动</a></li>
+			无缝滑屏
+			div id=pic_wrap
+				ul id=pic_list
+					li
+						a href=javascript
+							img src=img1.jpg
+					li
+						a href=javascript
+							img src=img1.jpg
+					li
+						a href=javascript
+							img src=img1.jpg
+					li
+						a href=javascript
+							img src=img1.jpg
+					li
+						a href=javascript
+							img src=img1.jpg
+				小圆点
+				div id=pic_nav
+					span class=active
+					span
+					span
+					span
+					span
+			可切换的选项卡
+			div class=tab
+				卡头
+				header class=tab_h
+					h2 MV主播
+					a href=javascript 更多&gt;
+				卡导航
+				div class=tab_navs
+					<a href="javascript:;">全部</a>
+					<a href="javascript:;">内地</a>
+					<a href="javascript:;">港台</a>
+					<a href="javascript:;">欧美</a>
+					<a href="javascript:;">韩国</a>
+					<a href="javascript:;">日本</a>
+					小绿
+					span
+				卡内容
+				div class=tab_wrap
+					ul class=loading
+					ul
+						li
+							a href=javascript
+								img src=img/a.jpg
+								span 君に贈る花がない
+							div class=tab_ice
+								div class=tab_ice_l
+									span class=tab_ice_l_pic
+									span 9877
+								div class=tab_ice_r
+									span class=tab_ice_r_pic
+									span 9
+						一组ul共6个li
+					ul class=loading
+	
+	滚动条
+	div id=scrollBar
+			
+js代码
+	取消移动端所有默认行为
+	rem适配
+	function getEle(objId,num){
+		if(arguments.length>1){
+			return document.querySelectorAll('#'+objId)
+		}else{
+			return document.querySelector('#'+objId)
+		}
+	}
+	
+	处理输入框焦点事件functiong changeFocus
+		*获取元素  重绘重排后 querySelector的整个获取dom元素的机制会失效
+		1获取输入框
+		2监听touchstart
+			ev兼容
+			this.focus()
+			ev.stopPropagation
+			ev.preventDefault
+		3监听touchstart
+			输入框.blur()
+			
+	菜单切换CMFCMenuBar
+		1获取btn按钮menuBtn
+		2获取浮层mask
+		3监听touchstart
+			ev兼容
+			if btn.className=menuBtnClos
+				btn.className=menuBtnOpen
+				mask.display=block
+			else if 
+				btn.className=menuBtnClos
+				mask.display=none
+				ev.stopPropagation
+				ev.preventDefault
+		4document监听touchstart
+			if btn.className=menuBtnOpen
+				btn.className=menuBtnClos
+				mask.display=none
+		5mask监听touchstart
+			ev兼容
+			ev.stopPropagation
+			ev.preventDefault
+	
+	可拖拽的导航drag
+		1取包裹元素navs，移动元素navs ul
+		2开启3D加速--CSS函数
+		3初始化变量
+			element对象 start对象 元素最大可左移距离wrap.clientWidth-item.offsetWidth
+		4初始化快速移动参数
+			lastTime=0,lastPoint=0,timeDis=1,pointDis=0
+			上一次时间 上一次位置  时间差-不出现NAN  位置差
+		5监听touchstart
+			ev兼容
+			touchC=ev.changedTouches[0]；
+			item.transiton=none
+			为element对象和start对象的x，y赋值---CSS，touchC.clientX
+			lastTime=new Date.getTime
+			lastPoint=CSS函数
+			pointDis=0  清除速度
+		6监听touchmove
+			ev兼容
+			now对象赋值x，y
+			disX=now.x-start.x  求手指滑动距离差
+			var translateX=element.x+disX
+			var scale=0
+			if translateX>0
+				处理左边留白-控制scale在0-1之间
+				scale=document.documentElement.clientWidth/(document.documentElement.clientWidth+translateX)
+				translateX=element.x+(disX*scale)
+			else if translateX<minX
+				处理右边留白
+				var space=minX-translateX;
+				处理同上
+			CSS   让元素移动，正常操作
+			实时更新快速滑动的4个初始化参数
+		7监听touchend
+			var speed=位置差/时间差    最后一刻的瞬时速度
+			var target=CSS元素 + speed*200
+			var time=Math.abs(speed)*.2
+			time要大于.3
+			var bezer=''
+			if target>0
+				tatget=0
+				bezer="cubic-bezier(.19,1.38,.52,1.32)";
+			else if target<minX
+				target=minX
+				bezer="cubic-bezier(.19,1.38,.52,1.32)";
+			item.transition=time+'s '+bezer
+			CSS元素 target
+	
+	点击拖拽导航变色changeColor
+		1取拖拽导航下的li，滑动元素ul
+		var startPoint=0；
+		2ul监听touchstart
+			ev兼容
+			this.isMove=false
+			start.x=ev.changedTouches[0].clientX
+		3ul监听touchmove
+			ev
+			now.x
+			disX 绝对值
+			if(!this.isMove&&disX>2){
+				this.isMove=true
+			}
+		4ul监听touchend
+			ev兼容
+			touchC
+			if(!this.isMove){
+				for(var i=0;i<ul.length;i++){
+					li.className=''
+				}
+				if(touchC.target.nodeName.toUpperCase()==='LI'){
+					touchC.target.className='active'
+				}else if(touchC.target.nodeName.toUpperCase()==='A'){
+					touchC.target.parentNode.className='active'
+				}
+			}
+			
+			
+	无缝滑屏seamless
+		1取wrap和ul,li,span，创建style
+		2开启3D加速--CSS函数
+		3ul.innerHTML+=ul.innerHTML
+		4cssText='ul{width:'+li.length+'00%}'
+		  cssText+='li{width:'+(100/li.length)+'%}'
+		  cssText+='wrap{height:'+li.offsetHeight+'px}'
+		  css.innerHTML+=cssText
+		  append
+		5var start,elem对象
+		6给每个图片定义一个号码var now
+		7仿抖动isX,isF
+		8手指移动距离disX，disY
+		9var x=’translateX‘
+		10wrap监听touchstart
+			重置isX，isF
+			清除定时器
+			ev
+			touchC
+			star.x,star.y
+			var left=CSS(ul,x)
+			now=Math.round(-left/document.documentElement.clientWidth)
+			if(noww==0){
+				now=spanNodes.length
+			}else if(now==li.length-1){
+				now=spanNodes.length-1
+			}
+			simple(ul,x,now,'none')
+			elem.x=CSS(ul,x)
+		11wrap监听touchmove
+			ev
+			if(!isX){return}
+			touchC
+			var now={}
+			now.x=touchC.clientX;
+			disX,disY
+			if(isF){
+				isF=false
+				if(Math.abs(disY)>Math.abs(disX)){
+					isX=false;
+					auto()
+					return
+				}
+			}
+			CSS(ul,x,elem.x+disX)
+		12wrap监听touchend
+			ev
+			touchC
+			var left=CSS(ul,x)
+			now=Math.round(-left/document.documentElement.clientWidth)
+			if(now<0){
+				now=0
+			}else if(now>li.length-1){
+				now=li.lenght-1
+			}
+			simple(ul,x,now,'.5s')
+			setTimeout(function(){
+				for(var i=0;i<span.length;i++){
+					span[i].className=''
+				}
+				span[now%span.length].className='active'
+			},30)
+			auto()
+		13auto(),var time;
+		14function auto(){
+			clearInterval(time);
+			time=setInterval(function(){
+				if(now==li.length-1){
+					now=span.length-1;
+					simple(ul,x,now,'none')
+				}
+				setTimeout(function(){
+					now++;
+					simple(ul,x,now,'.5s')
+					setTimeout(function(){
+						for(var i=0;i<span.length;i++){
+							span[i].className=''
+						}
+						span[now%span.length].className='active'
+					},600)
+				},20)
+			},3000)
+		}
+		15 obj对象,type变换类型,nowNum当前图片号码,delay延时时间
+		function simple(obj,type,nowNum,delay){
+			obj.style.transition=delay;
+			var move=-nowNum*document.documentElement.clientWidth
+			CSS(obj,x,move)
+		}	
+	
+	可切换的选项卡tab
+		1取wrap和navs
+		2var translateX=navs[0].offsetWidth;
+		3for(var i=0;i<wraps.length;i++){
+			move(wraps[i],navs[i]);
+		}
+		4function move(wrap,nav){
+			CSS(wrap,'translateZ',.1)
+			取loadings和span
+			小绿开启3D加速
+			取所有的a
+			//无缝 右滑，now-1，左滑，now+1
+			var now=0；
+			CSS(wrap,x,-translateX)
+			var elem,start对象
+			var isF，isX，isL=false
+		5wrap监听touchstart
+			if(isL){
+				return
+			}
+			wrap.style.transition='none'
+			ev兼容
+			touchC
+			elem.x,elem.y
+			start.x,start.y
+			isF,isX
+		6wrap监听touchmove
+			if(isL||!isX){return}
+			ev兼容
+			var now={}
+			disX,disY
+			if(isF){
+				isF=false;
+				if(Math.abs(disX)<Math.abs(disY)){
+					isX=false
+				}
+			}
+			CSS(wrap,x,elem.x+disX)
+			if(Math.abs(disX)>translateX/2){
+				end(disX)
+			}
+		7wrap监听touchend
+			if(isL){return}
+			ev兼容
+			touchC
+			var now={}
+			disX,disY
+			if(Math.abs(disX)<translateX/2){
+				wrap.style.transition='.5s'
+				CSS(wrap,x,-translateX)
+			}
+		8function end(disX){
+			isLoad=true;
+			//向右+1，向左-1
+			var dir=disX/Math.abs(disX)
+			var target=dir>0?0:-2*translateX;
+			wrap.style.transition='.5s';
+			CSS(wrap,x,target)
+			now -= dir   //向右滑now-1
+			if(now<0){
+				now=a.length-1
+			}else if(now>a.length-1){
+				now=0
+			}
+			wrap.addEventListenre('transitionend',transitionend)
+			wrap.addEventListenre('webkitTransitionEnd',transitionend)
+		}
+		9function transitionend(){
+			wrap.removeEventListener('transitionend',transitionend);
+			wrap.removeEventListener('webkitTransitionEnd',transitionend);
+			CSS(green,x,a[now].offsetLeft)
+			for(var i=0;i<loading.length;i++){
+				loading[i].style.opacity=1
+			}
+			setTimeout(function(){
+				isLoad=false;
+				for(var i=0;i<loading.lenght;i++){
+					loading[i].style.opacity=0
+				}
+				CSS(wrap,x,-translateX)
+				wrap.style.transition='none'
+			},1000)
+		}
+		}
+	
+	自定义竖向滑屏,滚动条definedByMyself
+	fucntion definedByMyself(){
+		1取content，scrollBar，inner,serach,headT，head
+		2 var scale=document.documentElement.clientHeight/inner.offsetHeight
+		3 bar.style.height=document.documentElement.clientHeight*scale+'px'
+		4 var callback={
+			start:fucntion(){
+				bar.style.opacity=1
+			},
+			move:fucntion(){
+				var scale =Math.abs(CSS(inner,y))/(inner.offsetHeight-wrap.clientHeith)
+				var y=(document.documentElement.clientHeight-bar.offsetHeight)*scale
+				CSS(bar,y,y)
+				if(y>headT.offsetHeight){
+					serach.style.display='none'
+				}else{
+					search.style.display='block'
+				}
+			},
+			end:function(){
+				bar.style.opacity=0
+			}
+			xiaomei(wrap,callback)
+		}
+	}
+	w.xiaomei=Object.create(null)
+	w.xiaomei.drag=function(wrap,callback){
+		var Tween={
+			Linear: function(t,b,c,d){ return c*t/d + b; },
+			Back: function(t,b,c,d,s){
+	            if (s == undefined) s = 1.70158;
+	            return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
+	       },
+	       Quad:function(t,b,c,d){
+	            return -c *(t/=d)*(t-2) + b;
+	       },
+	       Quint: function(t,b,c,d){
+	            return c*((t=t/d-1)*t*t*t*t + 1) + b;
+	        }
+		}
+		var item=wrap.children[0]
+		CSS(item,z,.1)   开启3D加速
+		var elem,start={}
+		var minY=wrap.clientHeight-item.offsetHeight
+		var lastTime=0;lastPoint=0;timeDis=1;pointDis=0
+		var isF,isY
+		wrap监听touchstart
+			minY=wrap.clientHeight-item.offsetHeight  重新获取，防止误取值
+			ev兼容
+			touchC
+			item.style.transition='none'
+			赋值elem，start，isF，isX
+			lastTime=new Date.getTime(),lastPoint=CSS(item,y),pointDis=0
+			if(callback&&typeof callback['start']==='function'){
+				callback['start']()
+			}
+		wrap监听touchmove
+			if(!isY){return}
+			ev兼容
+			var move={}
+			disX,disY
+			var translateY=elem.y+disY
+			var scale=0
+			if(translateY>0){
+				scale = document.documentElement.clientHeight/(document.documentElement.clientHeight+translateY);
+				translateY=elem.y+(disY*scale)
+			}else if(translateY<minY){
+				var space=minY-translateY
+				scale=document.documentElement.clientHeight/(document.documentElement.clientHeight+space)
+				translateY=elem.y+disY*scale
+			}
+			if(isF){
+				isF=false
+				if(Math.abs(disY)<Math.abs(disX)){
+					isY=false;
+					return
+				}
+			}
+			CSS(item,y,translateY)
+			var nowTime=new Date.getTime
+			var nowPoint=CSS(item,y)
+			timeDis=nowTime-lastTime
+			pointDis=nowPoint-lastPoint
+			lastTime=nowTime
+			lastPoint=nowPoint
+			if(callback&&typeof callback['move']===function){
+				callback['move']()
+			}
+			function move(target,time,type){
+				clearInterval(wrap.clearTime);
+				var t=0;
+				var b=CSS(item,y);
+				var d=time/0.02
+				var c=target-b
+				var s=3;
+				wrap.clearTime=setInterval(function(){
+					t++
+					if(t>d){
+						clearInterval(wrap.clearTime)
+						if(callback&&typeof callback['over']==='fucntion'){
+							callback['over']()
+						}
+					}else{
+						var point=Tween[type](t,b,c,d,s)
+						CSS(item,y,point)
+						if(callback&&typeof callback['move']==='function'){
+							callback['move']()
+						}
+					}
+				},20)
+			}
+	}
+		
+
+w.damu=Object.create(null);
+	
+	
+	/*拖拽组件 （解耦合）
+	 * 	快速滑屏
+	 * 	即点即停
+	 * 	防抖动
+	 * 	带滚动条
+	 * */
+	w.damu.drag=function (wrap,callback){
+		
+		var Tween = {
+			Linear: function(t,b,c,d){ return c*t/d + b; },
+			Back: function(t,b,c,d,s){
+	            if (s == undefined) s = 1.70158;
+	            return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
+	       },
+	       Quad:function(t,b,c,d){
+	            return -c *(t/=d)*(t-2) + b;
+	       },
+	       Quint: function(t,b,c,d){
+	            return c*((t=t/d-1)*t*t*t*t + 1) + b;
+	        }
+		}
+		
+		var item = wrap.children[0];
+		css(item,"translateZ",0.1);
+		var elementPoint = {x:0,y:0};
+		var startPoint = {x:0,y:0};
+		var minY = wrap.clientHeight - item.offsetHeight;
+		var lastTime =0;
+		var lastPoint=0;
+		var timeDis = 1;
+		var pointDis =0;
+		
+		var isFirst=true;
+		var isY = true;
+		
+		wrap.addEventListener("touchstart",function(ev){
+			
+			//兼容dom的绘制
+			minY = wrap.clientHeight - item.offsetHeight;
+			
+			//即点即停
+//			clearInterval(wrap.clearTime);
+			ev=ev||event;
+			var touchC = ev.changedTouches[0];
+			item.style.transition="none";
+			
+			elementPoint.x=css(item,"translateX");
+			elementPoint.y=css(item,"translateY");
+			startPoint.x=touchC.clientX;
+			startPoint.y=touchC.clientY;
+			
+			lastTime = new Date().getTime();
+			lastPoint = css(item,"translateY");
+			pointDis=0;
+			
+			isFirst=true;
+			isY = true;
+			
+			if(callback && typeof callback["start"] ==="function"){
+				callback["start"]();
+			}
+		})
+		wrap.addEventListener("touchmove",function(ev){
+			if(!isY){
+				return;
+			}
+			
+			
+			ev=ev||event;
+			var touchC = ev.changedTouches[0];
+			var movePoint ={x:0,y:0};
+			movePoint.x=touchC.clientX;
+			movePoint.y=touchC.clientY;
+			var dis={x:0,y:0};
+			dis.x = movePoint.x - startPoint.x;
+			dis.y = movePoint.y - startPoint.y;
+			
+			var translateY =elementPoint.y+dis.y;
+			var scale=0;
+			if(translateY>0){
+				scale = document.documentElement.clientHeight/(document.documentElement.clientHeight+translateY);
+				translateY = elementPoint.y+(dis.y*scale);
+			}else if(translateY<minY){
+				var space = minY - translateY;
+				scale = document.documentElement.clientHeight/(document.documentElement.clientHeight+space);
+				translateY = elementPoint.y+(dis.y*scale);
+			}
+			
+			
+			if(isFirst){
+				isFirst=false;
+				if(Math.abs(dis.y)<Math.abs(dis.x)){
+					isY=false;
+					return;
+				}
+			}
+			
+			
+			css(item,"translateY",translateY);
+			var nowTime = new Date().getTime();
+			var nowPoint = css(item,"translateY");
+			timeDis = nowTime - lastTime;
+			pointDis = nowPoint -lastPoint;
+			lastTime = nowTime;
+			lastPoint = nowPoint;
+			
+			//普通滑屏
+			if(callback && typeof callback["move"] ==="function"){
+				callback["move"]();
+			}
+		})
+		wrap.addEventListener("touchend",function(){
+			var speed = pointDis / timeDis;
+			var target = css(item,"translateY")+speed*200;
+			var time =  Math.abs(speed) *0.2;
+			time =time<0.3?0.3:time;
+//			var Bessel="";
+			var type ="Quint";
+			if(target>0){
+				target=0;
+				type ="Back";
+//				Bessel="cubic-bezier(.19,1.38,.52,1.32)";
+			}else if(target<minY){
+				target=minY;
+				type ="Back";
+//				Bessel="cubic-bezier(.19,1.38,.52,1.32)";
+			}
+//			item.style.transition=time*10+"s "+Bessel;
+//			css(item,"translateY",target);
+			move(target,time,type);
+			if(callback && typeof callback["end"] ==="function"){
+				callback["end"]();
+			}
+		})
+		
+		function move(target,time,type){
+			clearInterval(wrap.clearTime);
+			var t=0;
+			var b=css(item,"translateY");
+			var c=target-b;
+			var d=time/0.02;
+			var s=3;
+			wrap.clearTime=setInterval(function(){
+				
+				 /*
+				 * t:当前次数
+				 * b:初始位置
+				 * c:结束位置与初始位置之间的差值
+				 * d:总次数
+				 * s:回弹距离
+				 * 
+				 * */
+				t++;
+				if(t>d){
+					clearInterval(wrap.clearTime);
+					
+					//快速滑屏结束
+					if(callback && typeof callback["over"] ==="function"){
+						callback["over"]();
+					}
+				}else{
+					var point = Tween[type](t,b,c,d,s);
+					css(item,"translateY",point);
+					
+					//快速滑屏
+					if(callback && typeof callback["move"] ==="function"){
+						callback["move"]();
+					}
+				}
+				
+			},20);
+		}
+	}		
+			
+			
+			
+			
+			

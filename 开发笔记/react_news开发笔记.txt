@@ -1,0 +1,587 @@
+下载环境
+	 npm i -g creat-react-app
+	 creat-react-app react_news
+	 cd react_news
+	 npm i react-router@3 --save
+	 npm i axios --save
+	 npm i antd --save
+	 npm i react-responsive --save  //做移动端,不做可不要
+	 npm i babel-plugin-import --save-dev
+	 npm run eject
+	 修改config/webpack.config.dev.js
+	 在第二个babel里的query里加
+		plugins: [
+		  ['import', [{ libraryName: "antd", style: 'css' }]]
+		]，
+		
+	修改config/webpack.config.prod.js
+	在第一个babel里加
+		query:{
+			plugins: [
+			  ['import', [{ libraryName: "antd", style: 'css' }]]
+			]
+		},
+
+准备文件-在src下创建components文件夹
+	app.jsx
+	news_header.jsx
+	news_footer.jsx
+	news_container.jsx
+	news_detail.jsx
+	user_center.jsx
+	news_image_block.jsx
+	news_block.jsx
+	news_comments.jsx
+	news_products.jsx
+	
+删除src下的所有文件除了index.js
+	index文件引入app container detail 用户中心4个JSX文件
+			引入React ReactDom index.css router route indexroute hashHistory
+	渲染结构router history={hashHistory}		
+				route path='/' component={App}
+					indexRoute component={container}
+					route path 带id component={detail}
+					route path  用户中心component={user}
+					
+	app文件引入React和头和尾
+	渲染 头
+		{this.props.children}
+		 尾
+					
+	头(重点)，引入请求 Link react
+			  引入antd组件(9个)栅格，菜单，图标，按钮，对话框，页签，表单，输入框，提示信息
+			  引入logo图片
+			  const MenuItem=Menu.Item
+			  const FromItem=From.Item
+			  const TabPane=Tabs.Pane
+			  
+		初始化用户名，用户Id，key和是否显示对话框（4个）
+		
+		切换key方法--参数event，event.key跟新key状态
+					判断event.key是否登录/注册状态
+						是的话跟新key和show：true状态
+						跟新完后弹出对话框要重置表单的属性(this.props.form.resetFields())
+		
+					
+		对话框显/隐handleShow---参数isShow，event
+								跟新show的状态
+								
+								
+		用户退出handleOut---参数：无
+							跟新用户名和用户Id状态为null
+							删除本地用户存储信息removeItem
+							
+							
+		将要挂载时读取用户信息componentWillMount()
+					读取用户数据返回对象user JSON.parse(localStorage.getItem)
+					判断对象是否空
+						不空：更新用户名和用户Id状态 user.username   user.userId
+						
+						
+		表单提交handleSubmit---参数是否注册isRegister，事件对象event
+				//阻止默认行为
+				//判断action是登录还是注册
+				//获取表单内容，准备发请求
+				//解构表单的所有属性值(this.props.form.getFieldsValue())
+				let url = `http://newsapi.gugujiankong.com/Handler.ashx?action=${action}&username=${username}&password=${password}&r_username=${r_username}&r_password=${r_password}&r_confirmPassword=${r_confirmPassword}
+				axios  data数据返回    注册请求(返回true)参数(action：register usename:undefined passsword:undefined r_username:abc r_password:123123 r_confirmPassword:123123)
+					成功回调			登录请求返回	{
+														  "_id": {
+															"Timestamp": 1493561877,
+															"Machine": 6586036,
+															"Pid": 828,
+															"Increment": 758664,
+															"CreationTime": "/Date(1493561877000)/"
+														  },
+														  "UserId": 5212,
+														  "NickUserName": "zhiyong",
+														  "UserFace": null,
+														  "UserPassword": "123123"
+														}
+						判断注册
+							message.success()
+						判断登录
+							登录成功
+							更新用户名和用户Id状态 data.NickUserName  data.UserId
+							保存用户信息到本地
+								从状态里解构出用户名和用户Id
+								setItem  JSON.stringify({username,userId})
+				跟新对话框状态为隐藏
+		
+	渲染
+		解构出this.state的所有属性
+		解构form表单的getFiledDecorator属性(方法)---参1标识必传，参2对象可传
+		let UserMenu=username
+		？
+			MenuItem key='person' className='register'    key属性唯一标识 register CSS样式
+				Button 主 {username} 空格空格
+				Button 虚 Link  个人中心 空格空格
+				Button 幽灵 onClick-handleOut 退出
+		：
+			MenuItem key='logAndRes' className='register'
+				图标 appstor  登录/注册
+		
+		真正渲染
+		栅格1 3 19 1
+		3
+		 div className='logo'
+			img
+			span  ReactNews
+		19
+		  Menu onClick-changeKey mode='horizontal' selectedKeys={[key]}
+			MenuItem key=''       唯一标识与selectedKeys关联
+				图标 appstore 头条 社会 国内 国际 娱乐 体育 科技 时尚
+				{UserMenu}
+				
+		  Modal title=标题 visible={状态是否可见} okText=改变关闭按钮的字
+				onOk={this.handleShow.bind(this,false)}  onCancel={this.bandle.bind...}
+			Tabs onChange={()=>this.props.form.resetFields()}
+				TabPane tab=页签标题  key=标识
+					Form onSubmit={this.handleSubmit.bind(this,false)}
+						FromItem label='用户名'
+						 {
+							getFieldDecorator()
+								(
+									Input
+								)
+						 }
+						密码
+						Button 主 htmlType='submit'  登录
+				TabPane onSubmit={this.handleSubmit.bind(this,true)}
+						FromItem
+						Button 注册
+						
+	暴露 Form.create()()
+				
+	
+	container引入图片块，新闻块 产品块，4张轮播图 （4个）
+				引入antd的栅格 轮播Carousel 页签
+				引入container的css
+				const TabPane=Tabs.Pane
+
+	渲染
+		div className='newsContainer'      自定义的样式
+			栅格1 22 1
+			22
+			  div className='leftContainer1'  自定义的样式
+				Carousel autoplay
+					div img*4
+				NewsImageBlock 5个属性
+			  Tabs className='news_tab'     自定义的样式
+				TabPane tab=标题 key=唯一标识
+					NewsBlock type count
+				TabPane
+					NewsBlock
+			  Tabs className='news_product'  自定义样式
+				TabPane
+					NewsProducts
+			  div
+				NewsImageBlock 5个属性
+				NewsImageBlock 5个属性
+
+
+				
+	新闻详情 引入react请求评论块图片块 （4个）
+				引入antd的栅格、回到顶部BackTop
+				
+			初始化新闻news，不能为null，可为空串，空对象，空数组
+			将挂载
+				this.showDetail(this.props)
+			重挂载(nextProps)
+				this.showDetail(nextProps)
+			showDetail方法---参数props
+				let newsId = props.params.news_id   从params里取传过来的路由占位id
+				let url = `http://newsapi.gugujiankong.com/Handler.ashx?action=getnewsitem&uniquekey=${newsId}`;
+				发请求  取data 返回数组
+						跟新news状态
+	
+	渲染
+		解构news
+		栅格1 16 6 1
+		  16
+		    div dangerouslySetInnerHTML={{__html:新闻数据的内容}}
+			NewsComments 传newsId过去(从params里拿)
+		  6
+			NewsImageBlock 5属性 title可不写      //详情右侧的模块
+		BackTop
+		
+		
+	评论模块  引入react请求
+				antd的卡片，表单，输入框，按钮，栅格，提示信息，notification （7个）
+				const FromItem=From.Item
+				
+			初始化评论列表 空对象，空数组，空串，不能为null
+			将挂载
+				取新闻详情传过来的newsId
+				let url = `http://newsapi.gugujiankong.com/Handler.ashx?action=getcomments&uniquekey=${newsId}`;
+				发请求	data返回数组
+					先变量处理一下数据
+						返回一个对象只取有用信息
+						username，comment,dateTime  UserName，Comments，datetime
+					跟新状态
+
+			提交评论handleSubmit---event参数
+						阻止默认行为
+						从本地获取userId并判断是否空  JSON.parse(localStorage.getItem).userId
+						空让用户先登录  message。warn  return
+						解构newsId
+						取comment (this.porps.form.getFieldValue('comment'))
+						用userId newsId comment发路由请求
+						let url = `http://newsapi.gugujiankong.com/Handler.ashx?action=comment&userid=${userId}&uniquekey=${newsId}&commnet=${comment}`
+						axios
+							message.success
+							条用将挂载刷新
+							清空表单项resetFields()
+
+			收藏文章方法handleCollection--参数无
+						在本地去用户Id
+						准备文章Id newsId 用户Id，发请求
+						let url = `http://newsapi.gugujiankong.com/Handler.ashx?action=uc&userid=${userId}&uniquekey=${newsId}`
+						axios
+							notification.success({
+								message:'ReactNews',
+								description:'文章收藏成功'
+							})
+	
+			接收父组件传过来的最新属性，条用componentWillReceiveProps(nextProps)
+												条用将挂载
+	
+	渲染
+		解构comments   comments虽然返回数据的时候经过处理，但是调用map方法返回的还是一个数组
+		定义form的getFieldDecorator方法
+		遍历comments返回Card key唯一 title 遍历对象的username属性  extra={发布时间}
+								遍历对象的内容
+		真正渲染	
+		div
+			{commentsList}
+			Form onSubmit={this.handleSubmit}
+				FromItem label labelCol{{span}}     //labelCol同栅格用法
+					{
+						getFieldDecorator（'comment'）(
+							Input textarea
+						)
+					}
+				栅格6 push推9
+					按钮提交 主样式 htmlType      空格空格
+					案例收藏 主样式 点击方法this.handleCollection
+	暴露 Form.create()()
+
+
+	
+	用户中心模块 引入 请求 连接 react
+				antd的栅格，页签，卡片，上传Upload，模态框Modal，图标（6个）
+				const TabPane=Tabs.Pane
+
+				初始化评论列表，收藏列表 上传图片固定结构previewImage: '',
+														fileList: [{
+															uid: -1,
+															name: 'xxx.png',
+															status: 'done',
+															url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+														}]
+				
+				图片上传固定方法 是否阅览 阅览路径或缩略图  改变时重置状态
+				handleCancel = () => this.setState({ previewVisible: false })
+
+				handlePreview = (file) => {
+					this.setState({
+						previewImage: file.url || file.thumbUrl,
+						previewVisible: true,
+					});
+				}
+
+				handleChange = ({ fileList }) => this.setState({ fileList })
+					
+				
+				将挂载
+					根据本地的userId发请求获取评论列表数据
+					let url = `http://newsapi.gugujiankong.com/Handler.ashx?action=getusercomments&userid=${userId}`;
+					axios  data数据  数组
+						跟新comments的状态
+					
+					再请求收藏列表数据
+					url = `http://newsapi.gugujiankong.com/Handler.ashx?action=getuc&userid=${userId}`;	
+					axios  data数据  数组
+						更新collections状态
+					
+	渲染				
+		图片上传固定	const { previewVisible, previewImage, fileList } = this.state;
+						const uploadButton = (
+							<div>
+								<Icon type="plus" />
+								<div className="ant-upload-text">Upload</div>
+							</div>
+						);		
+		解构出comments，collections
+		判断collextions的长度渲染回来用collectionsList接收
+		？
+			遍历return
+				Card key title =文章Id extra Link news—deatil/文章Id  查看
+					文章标题
+		：目前没有任何收藏
+
+		判断comments长度渲染commentsList接收
+		？
+			遍历return
+				Card key title 时间，评论了文章Id extra link news—detail/文章Id 查看
+					内容
+		：您当前没有任何评论
+	
+		真正渲染
+		栅格1 22 1
+		  22
+			Tabs 			
+				TabPane	tab标题 key
+					{collectionsList}
+				TabPane	tab标题 key
+					{commentsList}	
+				头像设置固定写法
+				<TabPane tab="头像设置" key="3">
+                                <Upload
+                                    action="//jsonplaceholder.typicode.com/posts/"
+                                    listType="picture-card"
+                                    fileList={fileList}
+                                    onPreview={this.handlePreview}
+                                    onChange={this.handleChange} multiple="true"
+                                >
+                                    {uploadButton}
+                                </Upload>
+                                <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+                                    <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                                </Modal>
+                            </TabPane>
+					
+					
+	图片模块 引入请求，连接，react  Card
+				图片样式的css
+				
+				初始化图片新闻状态 newsArr 空数组，空串，不能为null
+				将挂载
+					解构type，count发请求
+					 let url = `http://newsapi.gugujiankong.com/Handler.ashx?action=getnews&type=${type}&count=${count}`
+					axios    返回数组数据
+						跟新newsArr状态
+	渲染				
+		解构5个属性
+		取newsArr
+		判断newsArr的长度用newsList接收渲染返回
+		?	遍历newsArr
+				div key className imgNewsContainer  自定义样式
+						link news——detail/文章Id
+							div
+								img style{{width:imgWidth}} src news.thumbnail_pic_s
+							div	
+								h3 style{width:imgWidth} news.title
+								p style{{width:imgwidth}}		
+		:	'暂时没有新闻推送';					
+								
+		真正渲染
+		div
+			Card title{title} sytle{{width,marginBottom:20px}}
+				{newsList}
+								
+	限制属性输入类型
+	NewsImageBlock.propTypes = {
+    title : React.PropTypes.string.isRequired,
+    type : React.PropTypes.string.isRequired,
+    count : React.PropTypes.number.isRequired,
+    width : React.PropTypes.string.isRequired,
+    imgWidth : React.PropTypes.string.isRequired
+	};
+								
+								
+	
+	新闻列表 引入请求，link，react，card
+			图片模块的css样式
+			
+			初始化图片新闻状态newsArr
+			
+			将挂载跟新newsArr状态
+			let url = `http://newsapi.gugujiankong.com/Handler.ashx?action=getnews&type=${type}&count=${count}`
+			
+	渲染
+		取5属性，取newsArr
+		判断newsArr的长度用newsList接收渲染返回
+		？ 遍历渲染 li link news——detail/文章Id  文章标题
+		：:'暂时没有新闻推送';
+		
+	真正渲染
+		div
+			card
+				ul
+				 {newsList}
+	
+	限制属性输入类型
+		NewsBlock.propTypes = {
+			type : React.PropTypes.string.isRequired,
+			count : React.PropTypes.number.isRequired
+		};
+								
+								
+	product 引入react link
+	渲染
+		div
+			div className=pro pro——bg
+				link 随便写
+			div className=pro					
+				link 随便写		
+			div className=pro pro——bg
+							link 随便写
+						div className=pro					
+							link 随便写	
+			div className=pro pro——bg
+							link 随便写
+						div className=pro					
+							link 随便写					
+								
+								
+								
+在src下引入index.css和images文件夹
+
+在src下创建componentsCSS文件夹
+	news_container.css
+			.newsContanier{
+				margin-top:15px;
+			}
+			.leftContainer1{
+				width:400px;
+				float: left;
+			}
+			.news_tab{
+				float: left;
+				width: 450px;
+				margin-left: 10px;
+			}
+			.news_tab a{
+				display: block;
+				font-size: 14px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				color:#666;
+			}
+			.news_product{
+				width:280px;
+				float: left;
+				margin-left: 10px;
+
+			}
+			.pro_bg{
+				background: #eeeeee;
+				margin-top: 10px;
+			}
+			.pro{
+				padding:5px;
+				overflow: hidden;
+			}
+
+			.pro a{
+				float: left;
+				line-height: 30px;
+				margin-right:5px;
+			}
+	news_footer.css(footer样式居中放大字体)
+	
+	news_image_block.css
+		.imgNewsContainer{
+			float: left;
+			margin-rigth:7px;
+			margin-bottom:10px
+		}
+		.imgNewsContainer h3{
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			color: #666;
+		}
+		
+		
+		获取新闻列表返回数组 根据count的数量返回数组里里面有几个对象 {
+											"Id": {
+											  "Timestamp": 1477658620,
+											  "Machine": 6586036,
+											  "Pid": 4780,
+											  "Increment": 10845490,
+											  "CreationTime": "/Date(1477658620000)/"
+											},
+											"title": "杜特尔特：做事讲求时机 我不会让人看透心思",
+											"date": "2016-10-28 19:23",
+											"author_name": "环球网",
+											"thumbnail_pic_s": "http://01.imgmini.eastday.com/mobile/20161028/20161028192308_30bd999045818b0489d2afc1873c6849_1_mwpm_03200403.jpeg",
+											"thumbnail_pic_s02": "http://01.imgmini.eastday.com/mobile/20161028/20161028192308_30bd999045818b0489d2afc1873c6849_1_mwpl_05500201.jpeg",
+											"thumbnail_pic_s03": "http://01.imgmini.eastday.com/mobile/20161028/20161028192308_30bd999045818b0489d2afc1873c6849_1_mwpl_05500201.jpeg",
+											"url": "http://mini.eastday.com/mobile/161028192308012.html?qid=juheshuju",
+											"uniquekey": "161028192308012",
+											"type": "头条",
+											"realtype": "国际"
+										  },
+										 
+		获取新闻详情根据uniquekey返回唯一对象{
+											  "pagecontent": "<article id=\"J_article\" class=\"J-article article\">\r\n<div id=\"title\">\r\n<div class=\"article-title\">\r\n<h1 class=\"title\">杜特尔特：做事讲求时机 我不会让人看透心思</h1>\r\n</div>\r\n<div class=\"article-src-time\">\r\n<span class=\"src\">2016-10-28 19:23&nbsp;&nbsp;&nbsp;&nbsp;来源：环球网</span>\r\n</div>\r\n</div>\r\n<div id=\"content\" class=\"J-article-content article-content\">\r\n<figure class=\"section img\">\r\n<a class=\"img-wrap\" style=\"padding-bottom: 74.72%;\" href=\"https://01.imgmini.eastday.com/mobile/20161028/20161028192308_30bd999045818b0489d2afc1873c6849_1.jpeg\" data-size=\"720x538\"><img width=\"100%\" alt=\"\" src=\"https://01.imgmini.eastday.com/mobile/20161028/20161028192308_30bd999045818b0489d2afc1873c6849_1.jpeg\" data-weight=\"720\" data-width=\"720\" data-height=\"538\"></a>\r\n</figure>\r\n<p class=\"section txt\">资料图：菲律宾总统杜特尔特</p>\r\n<p class=\"section txt\">【环球网综合报道】台湾“中央社”10月28日称，菲律宾总统杜特尔特今天表示，做事讲求时机，他不会让人看透心思，因为这样才有搞头。</p>\r\n<p class=\"section txt\">杜特尔特27日结束日本访问行程，返回家乡达沃市。他称在飞行途中听到上帝的声音，警告他不要再飙脏话，否则要让他坠机，“所以，我对上帝承诺，不再讲俚语、粗言秽语等等。”</p>\r\n<p class=\"section txt\">一名记者在达沃市召开的返国记者会上询问，不再飙脏话的承诺是否当真？杜特尔特响应，所有事情都有它的时机，有骂脏话的时机，也有不骂的时机。他补充说，“我不要被人看透心思，因为这样我就无法施展策略。一切都要经过校准，一切都有它的时机”。</p>\r\n<p class=\"section txt\">报道称，杜特尔特时而亲和、时而飙脏话，外交语言又常相互抵触，令人猜不透，在痛骂美国之后，他此次中国及日本的访问行程满载而归，让他今天这番话显得格外耐人寻味。</p>\r\n\r\n</div>\r\n</article>",
+											  "Id": {
+												"Timestamp": 0,
+												"Machine": 0,
+												"Pid": 0,
+												"Increment": 0,
+												"CreationTime": "/Date(0)/"
+											  },
+											  "title": "杜特尔特：做事讲求时机 我不会让人看透心思",
+											  "date": "2016-10-28 19:23",
+											  "author_name": "环球网",
+											  "thumbnail_pic_s": "http://01.imgmini.eastday.com/mobile/20161028/20161028192308_30bd999045818b0489d2afc1873c6849_1_mwpm_03200403.jpeg",
+											  "thumbnail_pic_s02": "http://01.imgmini.eastday.com/mobile/20161028/20161028192308_30bd999045818b0489d2afc1873c6849_1_mwpl_05500201.jpeg",
+											  "thumbnail_pic_s03": "http://01.imgmini.eastday.com/mobile/20161028/20161028192308_30bd999045818b0489d2afc1873c6849_1_mwpl_05500201.jpeg",
+											  "url": "http://mini.eastday.com/mobile/161028192308012.html?qid=juheshuju",
+											  "uniquekey": "161028192308012",
+											  "type": "头条",
+											  "realtype": "国际"
+											}
+											
+		获取指定新闻评论根据uniquekey返回数组，里面每条评论是一个对象{
+																		"Id": {
+																		  "Timestamp": 1487820065,
+																		  "Machine": 6586036,
+																		  "Pid": 6692,
+																		  "Increment": 13210986,
+																		  "CreationTime": "/Date(1487820065000)/"
+																		},
+																		"uniquekey": "161028192308012",
+																		"UserId": 18,
+																		"UserName": "1",
+																		"UserFace": null,
+																		"Comments": "1",
+																		"datetime": "2017-02-23"
+																	  },
+																	  
+		收藏指定新闻根据userid和uniquekey  返回true
+		
+		提交评论根据userid和uniquekey和commnet 返回true
+		
+		获取用户的收藏文章根据userid 返回数组 每条对象是一条新闻{
+																	"Id": {
+																	  "Timestamp": 1488704929,
+																	  "Machine": 6586036,
+																	  "Pid": 8832,
+																	  "Increment": 8154893,
+																	  "CreationTime": "/Date(1488704929000)/"
+																	},
+																	"UserId": 514,
+																	"uniquekey": "161028192308012",
+																	"Title": "杜特尔特：做事讲求时机 我不会让人看透心思"
+																  },
+																  
+		获取用户的评论根据userid  返回数组  每条评论是一个对象{
+																"Id": {
+																  "Timestamp": 1488704904,
+																  "Machine": 6586036,
+																  "Pid": 8832,
+																  "Increment": 8154891,
+																  "CreationTime": "/Date(1488704904000)/"
+																},
+																"uniquekey": "161028192308012",
+																"UserId": 514,
+																"UserName": "zxfjd3g",
+																"UserFace": null,
+																"Comments": "东奔西走",
+																"datetime": "2017-03-05"
+															  },
